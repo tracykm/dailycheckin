@@ -6,6 +6,8 @@ import process from "immer";
 type Entry = {
   feelings?: number;
   extras?: Record<string, boolean>;
+  details?: string;
+  compliments?: string;
   date: Date;
 };
 type DateType = { history: Entry[]; currentIdx: number };
@@ -66,6 +68,33 @@ const EXTRA_OPTIONS = {
   vibe: ["relaxed", "excited", "tired", "stressed", "anxious", "annoyed"],
 } as const;
 
+function TextArea({
+  id,
+  label,
+  className,
+  ...props
+}: React.DetailedHTMLProps<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  HTMLTextAreaElement
+> & { label?: string }) {
+  return (
+    <div style={{ width: "100%" }} className={className}>
+      <label
+        htmlFor={id}
+        className="block m-2 text-sm font-medium text-gray-900 dark:text-white"
+      >
+        {label}
+      </label>
+      <textarea
+        id={id}
+        rows={2}
+        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        {...props}
+      />
+    </div>
+  );
+}
+
 function App() {
   const [data, setData] = useState<DateType>(defaultHistory);
   console.log(data);
@@ -75,6 +104,9 @@ function App() {
       draft.history[data.currentIdx].feelings =
         newData.feelings ?? today.feelings;
       draft.history[data.currentIdx].date = newData.date ?? today.date;
+      draft.history[data.currentIdx].compliments =
+        newData.compliments ?? today.compliments;
+      draft.history[data.currentIdx].details = newData.details ?? today.details;
       if (newData.extras) {
         draft.history[data.currentIdx].extras = today.extras || {};
         const key = Object.keys(newData.extras)[0];
@@ -82,6 +114,7 @@ function App() {
           newData.extras[key];
       }
     });
+    debugger;
     setData(updatedData);
     localStorage.setItem("history", JSON.stringify(updatedData.history));
   };
@@ -112,6 +145,7 @@ function App() {
         >
           {[0, 1, 2, 3, 4].map((num) => (
             <FeelingImg
+              key={num}
               style={{ opacity: today.feelings === num ? 1 : 0.5 }}
               onClick={() => updateToday({ feelings: num })}
               num={num}
@@ -130,6 +164,7 @@ function App() {
           >
             {arr.map((d) => (
               <div
+                key={d}
                 onClick={() =>
                   updateToday({ extras: { [d]: !today?.extras?.[d] } })
                 }
@@ -141,6 +176,20 @@ function App() {
             ))}
           </div>
         ))}
+        <div style={{ margin: 10 }} />
+        <TextArea
+          value={today.details}
+          onChange={(e) => updateToday({ details: e.target.value || "" })}
+          className="m-2"
+          placeholder="Details"
+          id="details"
+        />
+        <TextArea
+          value={today.compliments}
+          onChange={(e) => updateToday({ compliments: e.target.value || "" })}
+          label="Compliments"
+          id="compliments"
+        />
       </header>
     </div>
   );
