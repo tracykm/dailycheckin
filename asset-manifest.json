@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/dailycheckin/static/css/main.7fc3b6fe.css",
+    "main.js": "/dailycheckin/static/js/main.3d2288ed.js",
+    "static/js/787.ee7b2cf2.chunk.js": "/dailycheckin/static/js/787.ee7b2cf2.chunk.js",
+    "index.html": "/dailycheckin/index.html",
+    "main.7fc3b6fe.css.map": "/dailycheckin/static/css/main.7fc3b6fe.css.map",
+    "main.3d2288ed.js.map": "/dailycheckin/static/js/main.3d2288ed.js.map",
+    "787.ee7b2cf2.chunk.js.map": "/dailycheckin/static/js/787.ee7b2cf2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7fc3b6fe.css",
+    "static/js/main.3d2288ed.js"
+  ]
+}
