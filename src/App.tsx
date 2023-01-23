@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import FeelingImg from "./FeelingImg";
-import process from "immer";
+import produce from "immer";
 
 type Entry = {
   feelings?: number;
@@ -64,8 +64,10 @@ const EXTRA_OPTIONS = {
     "clean",
     "create_art",
     "create_something",
+    "fun fiction",
   ],
   vibe: ["relaxed", "excited", "tired", "stressed", "anxious", "annoyed"],
+  exercise: ["bike", "hike", "so much walking", "buzzed", "drunk"],
 } as const;
 
 function TextArea({
@@ -97,10 +99,10 @@ function TextArea({
 
 function App() {
   const [data, setData] = useState<DateType>(defaultHistory);
-  console.log(data);
+
   const today = data.history[data.currentIdx];
   const updateToday = (newData: Partial<Entry>) => {
-    const updatedData = process(data, (draft) => {
+    const updatedData = produce(data, (draft) => {
       draft.history[data.currentIdx].feelings =
         newData.feelings ?? today.feelings;
       draft.history[data.currentIdx].date = newData.date ?? today.date;
@@ -114,7 +116,7 @@ function App() {
           newData.extras[key];
       }
     });
-    debugger;
+
     setData(updatedData);
     localStorage.setItem("history", JSON.stringify(updatedData.history));
   };
@@ -140,7 +142,7 @@ function App() {
             display: "flex",
             gap: 10,
             cursor: "pointer",
-            paddingTop: 60,
+            padding: "60px 0px",
           }}
         >
           {[0, 1, 2, 3, 4].map((num) => (
@@ -159,7 +161,7 @@ function App() {
               display: "flex",
               gap: 20,
               cursor: "pointer",
-              paddingTop: 60,
+              paddingBottom: 30,
             }}
           >
             {arr.map((d) => (
@@ -178,14 +180,15 @@ function App() {
         ))}
         <div style={{ margin: 10 }} />
         <TextArea
-          value={today.details}
+          value={today.details || ""}
           onChange={(e) => updateToday({ details: e.target.value || "" })}
           className="m-2"
           placeholder="Details"
+          rows={4}
           id="details"
         />
         <TextArea
-          value={today.compliments}
+          value={today.compliments || ""}
           onChange={(e) => updateToday({ compliments: e.target.value || "" })}
           label="Compliments"
           id="compliments"
